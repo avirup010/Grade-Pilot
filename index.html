@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Pilot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            background-color: #f7f8fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-top: 40px;
+        }
+        
+        h1 {
+            font-weight: 700;
+            font-size: 2rem;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+        
+        p.description {
+            color: #666;
+            font-size: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            margin-bottom: 24px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+            align-items: center;
+        }
+        
+        input, select {
+            padding: 12px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            flex: 1;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        input:focus, select:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+        }
+        
+        button {
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        
+        button:hover {
+            background-color: #4338ca;
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+        
+        button.secondary {
+            background-color: transparent;
+            color: #4f46e5;
+            border: 1px solid #4f46e5;
+        }
+        
+        button.secondary:hover {
+            background-color: rgba(79, 70, 229, 0.05);
+        }
+        
+        button.delete {
+            background-color: transparent;
+            color: #ef4444;
+            padding: 6px 12px;
+        }
+        
+        button.delete:hover {
+            background-color: rgba(239, 68, 68, 0.05);
+        }
+        
+        .course-item {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .course-info {
+            flex: 1;
+        }
+        
+        .course-name {
+            font-weight: 500;
+        }
+        
+        .course-details {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .results-card {
+            text-align: center;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+        }
+        
+        .cgpa-display {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 16px 0;
+        }
+        
+        .credits-info {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+            opacity: 0;
+        }
+        
+        .slide-up {
+            animation: slideUp 0.4s ease forwards;
+            transform: translateY(20px);
+            opacity: 0;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .animate-pop {
+            animation: pop 0.3s ease forwards;
+        }
+        
+        @keyframes pop {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .grading-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        .grading-table th, .grading-table td {
+            padding: 8px 12px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .grading-table th {
+            background-color: #4f46e5;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .grading-table tr:nth-child(even) {
+            background-color: #f8f8f8;
+        }
+        
+        .toggle-table {
+            background: none;
+            border: none;
+            color: #4f46e5;
+            font-size: 14px;
+            padding: 0;
+            margin: 10px 0;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        
+        .toggle-table:hover {
+            color: #4338ca;
+        }
+        
+        .marks-input {
+            display: none;
+        }
+        
+        .tab-container {
+            display: flex;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .tab {
+            padding: 8px 16px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+        
+        .tab.active {
+            color: #4f46e5;
+            border-bottom: 2px solid #4f46e5;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 600px) {
+            .form-row {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            input, select, button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="fade-in">
+        <h1>CGPA Calculator</h1>
+        <p class="description">Quick Grades, Instant Results</p>
+    </header>
+    
+    <div class="card slide-up" style="animation-delay: 0.1s;">
+        <div class="tab-container">
+            <div class="tab active" data-tab="grade">Grade Input</div>
+            <div class="tab" data-tab="marks">Marks Input</div>
+        </div>
+        
+        <div id="gradeInputForm">
+            <div class="form-row">
+                <input type="text" id="courseName" placeholder="Course Name" required>
+                <select id="creditHours">
+                    <option value="1">1 Credit</option>
+                    <option value="2">2 Credits</option>
+                    <option value="3" selected>3 Credits</option>
+                    <option value="4">4 Credits</option>
+                    <option value="5">5 Credits</option>
+                </select>
+                <select id="grade">
+                    <option value="10">O (Outstanding) - 10</option>
+                    <option value="9">A+ (Excellent) - 9</option>
+                    <option value="8">A (Very Good) - 8</option>
+                    <option value="7">B+ (Good) - 7</option>
+                    <option value="6">B (Above Average) - 6</option>
+                    <option value="5">C (Average) - 5</option>
+                    <option value="4">P (Pass) - 4</option>
+                    <option value="0">F (Fail) - 0</option>
+                    <option value="0">Ab (Absent) - 0</option>
+                </select>
+            </div>
+        </div>
+        
+        <div id="marksInputForm" class="marks-input">
+            <div class="form-row">
+                <input type="text" id="courseNameMarks" placeholder="Course Name" required>
+                <select id="creditHoursMarks">
+                    <option value="1">1 Credit</option>
+                    <option value="2">2 Credits</option>
+                    <option value="3" selected>3 Credits</option>
+                    <option value="4">4 Credits</option>
+                    <option value="5">5 Credits</option>
+                </select>
+                <input type="number" id="marks" placeholder="Marks (0-100)" min="0" max="100" required>
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <button id="addCourse">Add Course</button>
+        </div>
+        
+        <button class="toggle-table" id="toggleGradeTable">Show Grading System</button>
+        <div id="gradeTableContainer" style="display: none;">
+            <table class="grading-table">
+                <thead>
+                    <tr>
+                        <th>Letter Grade</th>
+                        <th>Grade Points</th>
+                        <th>Range of Total Marks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>O (Outstanding)</td>
+                        <td>10</td>
+                        <td>91 – 100</td>
+                    </tr>
+                    <tr>
+                        <td>A+ (Excellent)</td>
+                        <td>9</td>
+                        <td>81 – 90</td>
+                    </tr>
+                    <tr>
+                        <td>A (Very Good)</td>
+                        <td>8</td>
+                        <td>71 – 80</td>
+                    </tr>
+                    <tr>
+                        <td>B+ (Good)</td>
+                        <td>7</td>
+                        <td>61 – 70</td>
+                    </tr>
+                    <tr>
+                        <td>B (Above Average)</td>
+                        <td>6</td>
+                        <td>51 – 60</td>
+                    </tr>
+                    <tr>
+                        <td>C (Average)</td>
+                        <td>5</td>
+                        <td>41 – 50</td>
+                    </tr>
+                    <tr>
+                        <td>P (Pass)</td>
+                        <td>4</td>
+                        <td>40</td>
+                    </tr>
+                    <tr>
+                        <td>F (Fail)</td>
+                        <td>0</td>
+                        <td>&lt;40 Failure due to Insufficient marks</td>
+                    </tr>
+                    <tr>
+                        <td>Ab (Absent)</td>
+                        <td>0</td>
+                        <td>Failure due to non-appearance</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="card slide-up" style="animation-delay: 0.2s;">
+        <h2>Your Courses</h2>
+        <div id="courseList">
+            <p id="noCourses" style="color: #666; text-align: center; padding: 20px;">No courses added yet</p>
+        </div>
+        <div class="form-row" style="margin-top: 20px;">
+            <button id="calculateCGPA">Calculate CGPA</button>
+            <button id="clearAll" class="secondary">Clear All</button>
+        </div>
+    </div>
+    
+    <div id="resultsCard" class="card results-card slide-up" style="display: none; animation-delay: 0.3s;">
+        <h2>Your CGPA</h2>
+        <div class="cgpa-display" id="cgpaResult">0.00</div>
+        <p class="credits-info" id="creditsInfo">Total Credits: 0</p>
+    </div>
+    
+    <script>
+        // DOM Elements
+        const courseNameInput = document.getElementById('courseName');
+        const creditHoursSelect = document.getElementById('creditHours');
+        const gradeSelect = document.getElementById('grade');
+        const courseNameMarksInput = document.getElementById('courseNameMarks');
+        const creditHoursMarksSelect = document.getElementById('creditHoursMarks');
+        const marksInput = document.getElementById('marks');
+        const addCourseBtn = document.getElementById('addCourse');
+        const courseList = document.getElementById('courseList');
+        const noCourses = document.getElementById('noCourses');
+        const calculateBtn = document.getElementById('calculateCGPA');
+        const clearAllBtn = document.getElementById('clearAll');
+        const resultsCard = document.getElementById('resultsCard');
+        const cgpaResult = document.getElementById('cgpaResult');
+        const creditsInfo = document.getElementById('creditsInfo');
+        const toggleGradeTableBtn = document.getElementById('toggleGradeTable');
+        const gradeTableContainer = document.getElementById('gradeTableContainer');
+        const tabs = document.querySelectorAll('.tab');
+        const gradeInputForm = document.getElementById('gradeInputForm');
+        const marksInputForm = document.getElementById('marksInputForm');
+        
+        // Course data
+        let courses = [];
+        let currentInputMode = 'grade';
+        
+        // Tab switching
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                tabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                currentInputMode = this.getAttribute('data-tab');
+                
+                if (currentInputMode === 'grade') {
+                    gradeInputForm.style.display = 'block';
+                    marksInputForm.style.display = 'none';
+                } else {
+                    gradeInputForm.style.display = 'none';
+                    marksInputForm.style.display = 'block';
+                }
+            });
+        });
+        
+        // Toggle grade table
+        toggleGradeTableBtn.addEventListener('click', function() {
+            if (gradeTableContainer.style.display === 'none') {
+                gradeTableContainer.style.display = 'block';
+                this.textContent = 'Hide Grading System';
+            } else {
+                gradeTableContainer.style.display = 'none';
+                this.textContent = 'Show Grading System';
+            }
+        });
+        
+        // Add animation to cards on load
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                document.querySelectorAll('.card').forEach(card => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                });
+            }, 100);
+        });
+        
+        // Convert marks to grade points
+        function marksToGradePoints(marks) {
+            if (marks >= 91) return 10;
+            if (marks >= 81) return 9;
+            if (marks >= 71) return 8;
+            if (marks >= 61) return 7;
+            if (marks >= 51) return 6;
+            if (marks >= 41) return 5;
+            if (marks >= 40) return 4;
+            return 0;
+        }
+        
+        // Get grade letter from grade points
+        function getGradeLetter(gradePoints) {
+            switch (parseInt(gradePoints)) {
+                case 10: return 'O (Outstanding)';
+                case 9: return 'A+ (Excellent)';
+                case 8: return 'A (Very Good)';
+                case 7: return 'B+ (Good)';
+                case 6: return 'B (Above Average)';
+                case 5: return 'C (Average)';
+                case 4: return 'P (Pass)';
+                case 0: return 'F (Fail)';
+                default: return 'Unknown';
+            }
+        }
+        
+        // Add a new course
+        addCourseBtn.addEventListener('click', function() {
+            let courseName, creditHours, gradePoints;
+            
+            if (currentInputMode === 'grade') {
+                courseName = courseNameInput.value.trim();
+                creditHours = parseFloat(creditHoursSelect.value);
+                gradePoints = parseFloat(gradeSelect.value);
+                
+                if (!courseName) {
+                    animateElement(courseNameInput, 'shake');
+                    return;
+                }
+            } else {
+                courseName = courseNameMarksInput.value.trim();
+                creditHours = parseFloat(creditHoursMarksSelect.value);
+                const marks = parseFloat(marksInput.value);
+                
+                if (!courseName) {
+                    animateElement(courseNameMarksInput, 'shake');
+                    return;
+                }
+                
+                if (isNaN(marks) || marks < 0 || marks > 100) {
+                    animateElement(marksInput, 'shake');
+                    return;
+                }
+                
+                gradePoints = marksToGradePoints(marks);
+            }
+            
+            // Add course to array
+            const course = {
+                id: Date.now(),
+                name: courseName,
+                credits: creditHours,
+                grade: gradePoints
+            };
+            
+            courses.push(course);
+            renderCourses();
+            
+            // Clear input fields
+            if (currentInputMode === 'grade') {
+                courseNameInput.value = '';
+                courseNameInput.focus();
+            } else {
+                courseNameMarksInput.value = '';
+                marksInput.value = '';
+                courseNameMarksInput.focus();
+            }
+            
+            // Animate the add button
+            animateElement(addCourseBtn, 'pop');
+        });
+        
+        // Render the list of courses
+        function renderCourses() {
+            if (courses.length === 0) {
+                noCourses.style.display = 'block';
+                courseList.innerHTML = '';
+                courseList.appendChild(noCourses);
+                
+                // Hide results if no courses
+                resultsCard.style.display = 'none';
+                return;
+            }
+            
+            noCourses.style.display = 'none';
+            courseList.innerHTML = '';
+            
+            courses.forEach(course => {
+                const courseItem = document.createElement('div');
+                courseItem.className = 'course-item animate-pop';
+                
+                // Get grade letter from points
+                const gradeLetter = getGradeLetter(course.grade);
+                
+                courseItem.innerHTML = `
+                    <div class="course-info">
+                        <div class="course-name">${course.name}</div>
+                        <div class="course-details">${course.credits} credit${course.credits !== 1 ? 's' : ''} • Grade: ${gradeLetter} (${course.grade})</div>
+                    </div>
+                    <button class="delete" data-id="${course.id}">Remove</button>
+                `;
+                
+                courseList.appendChild(courseItem);
+                
+                // Add event listener to remove button
+                courseItem.querySelector('.delete').addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    removeCourse(id);
+                });
+            });
+        }
+        
+        // Remove a course
+        function removeCourse(id) {
+            const index = courses.findIndex(course => course.id === id);
+            if (index !== -1) {
+                // Animate removal
+                const courseItem = document.querySelector(`[data-id="${id}"]`).parentNode;
+                courseItem.style.overflow = 'hidden';
+                courseItem.style.transition = 'all 0.3s ease';
+                courseItem.style.height = `${courseItem.offsetHeight}px`;
+                
+                setTimeout(() => {
+                    courseItem.style.height = '0';
+                    courseItem.style.opacity = '0';
+                    courseItem.style.margin = '0';
+                    courseItem.style.padding = '0';
+                }, 10);
+                
+                setTimeout(() => {
+                    courses.splice(index, 1);
+                    renderCourses();
+                }, 300);
+            }
+        }
+        
+        // Calculate CGPA
+        calculateBtn.addEventListener('click', function() {
+            if (courses.length === 0) {
+                animateElement(this, 'shake');
+                return;
+            }
+            
+            let totalGradePoints = 0;
+            let totalCredits = 0;
+            
+            courses.forEach(course => {
+                totalGradePoints += course.grade * course.credits;
+                totalCredits += course.credits;
+            });
+            
+            const cgpa = totalGradePoints / totalCredits;
+            
+            // Display results
+            cgpaResult.textContent = cgpa.toFixed(2);
+            creditsInfo.textContent = `Total Credits: ${totalCredits}`;
+            
+            // Show results card with animation
+            if (resultsCard.style.display === 'none') {
+                resultsCard.style.display = 'block';
+                setTimeout(() => {
+                    resultsCard.classList.add('animate-pop');
+                }, 10);
+            } else {
+                animateElement(resultsCard, 'pop');
+            }
+            
+            // Animate the CGPA number
+            animateCountUp(cgpaResult, cgpa);
+        });
+        
+        // Clear all courses
+        clearAllBtn.addEventListener('click', function() {
+            if (courses.length === 0) {
+                return;
+            }
+            
+            // Animate all course items out
+            const courseItems = document.querySelectorAll('.course-item');
+            courseItems.forEach((item, index) => {
+                setTimeout(() => {
+                    item.style.transition = 'all 0.3s ease';
+                    item.style.opacity = '0';
+                    item.style.transform = 'translateX(20px)';
+                }, index * 50);
+            });
+            
+            setTimeout(() => {
+                courses = [];
+                renderCourses();
+                
+                // Hide results
+                if (resultsCard.style.display !== 'none') {
+                    resultsCard.style.transition = 'all 0.3s ease';
+                    resultsCard.style.opacity = '0';
+                    resultsCard.style.transform = 'translateY(20px)';
+                    
+                    setTimeout(() => {
+                        resultsCard.style.display = 'none';
+                        resultsCard.style.opacity = '1';
+                        resultsCard.style.transform = 'translateY(0)';
+                    }, 300);
+                }
+            }, courses.length * 50 + 100);
+            
+            animateElement(this, 'pop');
+        });
+        
+        // Animation helper function
+        function animateElement(element, animationType) {
+            element.classList.remove(animationType);
+            void element.offsetWidth; // Trigger reflow
+            element.classList.add(animationType);
+            
+            setTimeout(() => {
+                element.classList.remove(animationType);
+            }, 500);
+        }
+        
+        // Animate counting up for CGPA display
+        function animateCountUp(element, targetValue) {
+            const duration = 1000; // ms
+            const startValue = parseFloat(element.textContent) || 0;
+            const startTime = performance.now();
+            
+            function updateValue(currentTime) {
+                const elapsedTime = currentTime - startTime;
+                
+                if (elapsedTime < duration) {
+                    const progress = elapsedTime / duration;
+                    const currentValue = startValue + (targetValue - startValue) * easeOutQuad(progress);
+                    element.textContent = currentValue.toFixed(2);
+                    requestAnimationFrame(updateValue);
+                } else {
+                    element.textContent = targetValue.toFixed(2);
+                }
+            }
+            
+            requestAnimationFrame(updateValue);
+        }
+        
+        // Easing function for smoother animation
+        function easeOutQuad(t) {
+            return t * (2 - t);
+        }
+        
+        // Add keydown event for adding courses with Enter key
+        courseNameInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                addCourseBtn.click();
+            }
+        });
+        
+        courseNameMarksInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                addCourseBtn.click();
+            }
+        });
+        
+        marksInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                addCourseBtn.click();
+            }
+        });
+        
+        // Add custom animation class
+        document.styleSheets[0].insertRule(`
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                20%, 60% { transform: translateX(-5px); }
+                40%, 80% { transform: translateX(5px); }
+            }
+        `, document.styleSheets[0].cssRules.length);
+        
+        document.styleSheets[0].insertRule(`
+            .shake {
+                animation: shake 0.4s ease;
+            }
+        `, document.styleSheets[0].cssRules.length);
+        
+        document.styleSheets[0].insertRule(`
+            .pop {
+                animation: pop 0.3s ease;
+            }
+        `, document.styleSheets[0].cssRules.length);
+    </script>
+</body>
+</html>
