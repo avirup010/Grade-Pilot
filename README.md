@@ -2,12 +2,12 @@
 # ✈️ GradePilot  
 ### Quick Grades, Instant Results  
 
-GradePilot is a streamlined CGPA calculator tailored for students, built into a single HTML file. Following SRM Institute of Science and Technology (SRMIST)’s grading system, it delivers fast, accurate results with a polished, animated interface—no setup needed, just efficiency.
+GradePilot is a streamlined GPA calculator tailored for students, built into a single HTML file. Following SRM Institute of Science and Technology (SRMIST)’s grading system, it delivers fast, accurate results with a polished, animated interface—no setup needed, just efficiency.
 
 ---
 
 ## Overview  
-GradePilot is a self-contained web tool that computes your Cumulative Grade Point Average (CGPA) based on SRMIST’s 10-point grading scale. Input courses via grades or marks, manage your list, and get instant results in a responsive, modern design.
+GradePilot is a self-contained web tool that computes your Grade Point Average (GPA) based on SRMIST’s 10-point grading scale. Input courses via grades or marks, manage your list, and get instant results in a responsive, modern design.
 
 ---
 
