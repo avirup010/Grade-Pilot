@@ -15,7 +15,7 @@ GradePilot is a self-contained web tool that computes your Grade Point Average (
 - **SRMIST Grading**: Adheres to SRMIST’s system—O (10) to F/Ab (0)—with marks mapped to grades (e.g., 91-100 = 10).  
 - **Flexible Input**: Choose direct grade selection (O to F) or marks entry (0-100), auto-converted to SRMIST points.  
 - **Course Management**: Add, delete, or clear courses with smooth transitions.  
-- **Real-Time Calculation**: Computes CGPA as (grade points × credits) ÷ total credits, displayed with a counting animation.  
+- **Real-Time Calculation**: Computes GPA as (grade points × credits) ÷ total credits, displayed with a counting animation.  
 - **Visual Design**: Card-based layouts, subtle shadows, and animations for a standout experience.  
 - **Cross-Device**: Fully responsive for desktop or mobile use.  
 
