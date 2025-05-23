@@ -37,7 +37,7 @@ Notable mechanics:
 ## Getting Started  
 1. Download `gradepilot.html` from this repository.  
 2. Open it in any modern web browser.  
-3. Add your courses and calculate your CGPA per SRMIST’s system.  
+3. Add your courses and calculate your GPA per SRMIST’s system.  
 
 ---
 
@@ -51,7 +51,7 @@ Notable mechanics:
 
 ## Code Insights  
 - **CSS**: Modern flexbox and media queries ensure responsiveness, with custom keyframes for animations.  
-- **JavaScript**: Powers the logic—course rendering, SRMIST CGPA math, and animation triggers—optimized for accuracy.  
+- **JavaScript**: Powers the logic—course rendering, SRMIST GPA math, and animation triggers—optimized for accuracy.  
 - **HTML**: Lean structure with semantic elements, including SRMIST’s grading table for reference.  
 
 Dive into the source—it’s compact, well-organized, and easy to tweak.
